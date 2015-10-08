@@ -1,0 +1,9 @@
+#!/usr/bin/make -rf
+
+-include .config
+
+print-%:
+	@echo '$*=$($*)'
+
+get-%:
+	@echo '$($*)'

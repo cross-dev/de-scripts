@@ -26,3 +26,7 @@ __de_upgrade_basement() {
     #__de_privileged_junest pacman-key --refresh-keys
     __de_privileged_junest pacman -Syu --noconfirm
 }
+
+__de_environment_config() {
+    kconfig-mconf ${BASE_DE_WORKSPACE_FOLDER}/Kconfig
+}

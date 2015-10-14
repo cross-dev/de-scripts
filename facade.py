@@ -54,7 +54,12 @@ def sudo(args):
     return junest_privileged_all_run(args.cmd)
 
 def tools(args):
-    pass
+    print("FACADE_PATH=" + os.path.realpath(__file__))
+    print()
+    input = open(os.path.join(base, "tools.sh.in"), "r")
+    print(input.read())
+    input.close()
+
 
 def menuconfig(args):
     return junest_unprivileged_all_run(["kconfig-nconf", "Kconfig"], cwd=root)

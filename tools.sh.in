@@ -1,0 +1,17 @@
+make() {
+    ${FACADE_PATH} shell make "$@"
+}
+
+makepkg() {
+    # makepkg is patched to allow being run as root
+    ${FACADE_PATH} sudo makepkg "$@"
+}
+
+pacman() {
+    ${FACADE_PATH} sudo pacman "$@"
+}
+
+yaourt() {
+    # yaourt is patched to allow being run as root
+    ${FACADE_PATH} sudo yaourt "$@"
+}

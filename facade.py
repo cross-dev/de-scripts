@@ -22,30 +22,30 @@ def sanitize(args):
     p = subprocess.Popen(sanitize, cwd=root, env=has_junest_env)
     return p.wait()
 
-def junest_run(mountpoint, junest_args, shell_command):
+def junest_run(mountpoint, junest_args, shell_command, cwd):
     env = dict(extend_env(), JUNEST_HOME=mountpoint)
     runner = os.path.join(base, "junest-run")
-    p = subprocess.Popen([runner] + junest_args + ['--'] + shell_command, cwd=root, env=env)
+    p = subprocess.Popen([runner] + junest_args + ['--'] + shell_command, cwd=cwd, env=env)
     #p = subprocess.Popen(["/bin/bash"])
     return p.wait()
 
-def junest_privileged_run(mountpoint, shell_command):
-    return junest_run(mountpoint=mountpoint, junest_args=["-f"], shell_command=shell_command)
+def junest_privileged_run(mountpoint, shell_command, cwd):
+    return junest_run(mountpoint=mountpoint, junest_args=["-f"], shell_command=shell_command, cwd=cwd)
 
-def junest_unprivileged_run(mountpoint, shell_command):
-    return junest_run(mountpoint=mountpoint, junest_args=[], shell_command=shell_command)
+def junest_unprivileged_run(mountpoint, shell_command, cwd):
+    return junest_run(mountpoint=mountpoint, junest_args=[], shell_command=shell_command, cwd=cwd)
 
-def junest_privileged_base_run(shell_command):
+def junest_privileged_base_run(shell_command, cwd="."):
     mountpoint = os.path.join(base, "..", "layers", "base")
-    return junest_privileged_run(mountpoint=mountpoint, shell_command=shell_command)
+    return junest_privileged_run(mountpoint=mountpoint, shell_command=shell_command, cwd=cwd)
 
-def junest_privileged_all_run(shell_command):
+def junest_privileged_all_run(shell_command, cwd="."):
     mountpoint = os.path.join(base, "..", "mnt", "all")
-    return junest_privileged_run(mountpoint=mountpoint, shell_command=shell_command)
+    return junest_privileged_run(mountpoint=mountpoint, shell_command=shell_command, cwd=cwd)
 
-def junest_unprivileged_all_run(shell_command):
+def junest_unprivileged_all_run(shell_command, cwd="."):
     mountpoint = os.path.join(base, "..", "mnt", "all")
-    return junest_unprivileged_run(mountpoint=mountpoint, shell_command=shell_command)
+    return junest_unprivileged_run(mountpoint=mountpoint, shell_command=shell_command, cwd=cwd)
 
 def shell(args):
     return junest_unprivileged_all_run(args.cmd)
@@ -57,6 +57,7 @@ def tools(args):
     pass
 
 def menuconfig(args):
+    return junest_unprivileged_all_run(["kconfig-nconf", "Kconfig"], cwd=root)
 
 ##### PROGRAM MAIN FLOW
 

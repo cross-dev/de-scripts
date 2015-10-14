@@ -19,7 +19,7 @@ LAYERS_BASE=${BASE}/.cross-dev/layers
 MNT_BASE=${BASE}/.cross-dev/mnt
 
 # Make sure layered structure is alright
-mkdir -p ${LAYERS_BASE}/{base,install,config,good,bad}
+mkdir -p ${LAYERS_BASE}/{base,install,config,good,bad,dist}
 mkdir -p ${MNT_BASE}/{install,config,all}
 
 # Will check the basement and download the image as needed

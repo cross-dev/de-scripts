@@ -7,11 +7,12 @@ die() {
     exit 1
 }
 
-[ -z "$JUNEST_HOME" ] && die "JUNEST_HOME must be passed"
-[ -d "$JUNEST_HOME" ] || die "JUNEST_HOME must be a folder"
+[ -z "${JUNEST_HOME}" ] && die "JUNEST_HOME must be passed"
+[ -d "${JUNEST_HOME}" ] || die "JUNEST_HOME must be a folder"
 which junest &>/dev/null || die "junest executable must be found from the PATH"
-[ -f .config ] || die ".config file is not found"
+CONFIG=$($(dirname $0)/deroot)/.config
+[ -f ${CONFIG} ] || die ".config file is not found"
 
-source <(awk '{print "export",$0}' .config)
+source <(awk '{if ($1 != "#") print "export",$0}' ${CONFIG})
 
 junest "$@"

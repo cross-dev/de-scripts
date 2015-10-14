@@ -1,0 +1,4 @@
+#!/bin/bash
+
+[ -x .cross-dev/product/configure ] && .cross-dev/product/configure
+

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+[ -x .cross-dev/product/install ] && .cross-dev/product/install

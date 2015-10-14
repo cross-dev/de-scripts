@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -ex
+
+source $(dirname $0)/lib.sh
+
+if ! which unionfs &>/dev/null
+then
+    die "unionfs-fuse is not available"
+fi
+
+[ -d .cross-dev ] || die "cwd must be the root of the development environment"
+which junest || die "junest executable is not available from PATH"
+
+# Stick with absolute paths
+BASE=$(pwd)
+
+LAYERS_BASE=${BASE}/.cross-dev/layers
+MNT_BASE=${BASE}/.cross-dev/mnt
+
+# Make sure layered structure is alright
+mkdir -p ${LAYERS_BASE}/{base,install,config,good,bad}
+mkdir -p ${MNT_BASE}/{install,config,all}
+
+# Will check the basement and download the image as needed
+JUNEST_HOME=${LAYERS_BASE}/base junest ':'
+
+# Create unionfs mounts as needed
+if ! df -t fuse.unionfs ${MNT_BASE}/install &>/dev/null
+then
+    unionfs -o cow ${LAYERS_BASE}/install=RW:${LAYERS_BASE}/base=RO ${MNT_BASE}/install
+fi
+
+if ! df -t fuse.unionfs ${MNT_BASE}/config &>/dev/null
+then
+    unionfs -o cow ${LAYERS_BASE}/config=RW:${LAYERS_BASE}/install=RO:${LAYERS_BASE}/base=RO ${MNT_BASE}/config
+fi
+
+if ! df -t fuse.unionfs ${MNT_BASE}/all &>/dev/null
+then
+    unionfs -o cow ${LAYERS_BASE}/bad=RW:${LAYERS_BASE}/good=RO:${LAYERS_BASE}/config=RO:${LAYERS_BASE}/install=RO:${LAYERS_BASE}/base=RO ${MNT_BASE}/all
+fi
+
+# Rebuild Kconfig files
+echo "## DO NOT EDIT! MINDLESS ROBOTS INBOUND!!" >${BASE}/Kconfig
+(cd ${BASE} && for K in $(find . -maxdepth 2 -not -path ./Kconfig -type f -name Kconfig); do echo source \"$K\"; done) >>${BASE}/Kconfig
+echo "## DO NOT EDIT! MINDLESS ROBOTS INBOUND!!" >${BASE}/Kconfig
+echo "## DO NOT EDIT! MINDLESS ROBOTS INBOUND!!" >${BASE}/.cross-dev/Kconfig
+(for K in $(find .cross-dev -maxdepth 2 -not -path .cross-dev/Kconfig -type f -name Kconfig); do echo source \"$K\"; done) >>${BASE}/.cross-dev/Kconfig
+
+# Run product installment script and apply modifications to the product mount point
+JUNEST_HOME=${BASE}/.cross-dev/mnt/install junest -f -- ${BASE}/.cross-dev/de-scripts/product-install
+# Run product configuration script and apply modifications to the configured mount point
+chmod -R u+w ${LAYERS_BASE}/config/*
+rm -rf ${LAYERS_BASE}/config/*
+JUNEST_HOME=${BASE}/.cross-dev/mnt/config junest -f -- ${BASE}/.cross-dev/de-scripts/product-configure
+

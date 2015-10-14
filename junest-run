@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -ex
+
+die() {
+    echo "$@" 1>&2
+    exit 1
+}
+
+[ -z "$JUNEST_HOME" ] && die "JUNEST_HOME must be passed"
+[ -d "$JUNEST_HOME" ] || die "JUNEST_HOME must be a folder"
+which junest &>/dev/null || die "junest executable must be found from the PATH"
+[ -f .config ] || die ".config file is not found"
+
+source <(awk '{print "export",$0}' .config)
+
+junest "$@"

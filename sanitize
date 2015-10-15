@@ -42,11 +42,10 @@ then
 fi
 
 # Rebuild Kconfig files
-echo "## DO NOT EDIT! MINDLESS ROBOTS INBOUND!!" >${BASE}/Kconfig
-(cd ${BASE} && for K in $(find . -maxdepth 2 -not -path ./Kconfig -type f -name Kconfig); do echo source \"$K\"; done) >>${BASE}/Kconfig
-echo "## DO NOT EDIT! MINDLESS ROBOTS INBOUND!!" >${BASE}/Kconfig
 echo "## DO NOT EDIT! MINDLESS ROBOTS INBOUND!!" >${BASE}/.cross-dev/Kconfig
 (for K in $(find .cross-dev -maxdepth 2 -not -path .cross-dev/Kconfig -type f -name Kconfig); do echo source \"$K\"; done) >>${BASE}/.cross-dev/Kconfig
+echo "## DO NOT EDIT! MINDLESS ROBOTS INBOUND!!" >${BASE}/Kconfig
+(cd ${BASE} && for K in $(find . -maxdepth 2 -not -path ./Kconfig -type f -name Kconfig); do echo source \"$K\"; done) >>${BASE}/Kconfig
 
 # Run product installment script and apply modifications to the product mount point
 JUNEST_HOME=${BASE}/.cross-dev/mnt/install junest -f -- ${BASE}/.cross-dev/de-scripts/product-install

@@ -11,8 +11,5 @@ die() {
 [ -d "${JUNEST_HOME}" ] || die "JUNEST_HOME must be a folder"
 which junest &>/dev/null || die "junest executable must be found from the PATH"
 CONFIG=$($(dirname $0)/deroot)/.config
-[ -f ${CONFIG} ] || die ".config file is not found"
-
-source <(awk 'NF {if ($1 != "#") print "export",$0}' ${CONFIG})
 
 junest "$@"

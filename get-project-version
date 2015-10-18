@@ -1,0 +1,5 @@
+#!/bin/bash
+
+root=$1
+project=$2
+cd $1 && repo forall $2 -c git rev-parse HEAD

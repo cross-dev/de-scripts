@@ -39,3 +39,13 @@ yaourt() {
         %FACADE_PATH% sudo yaourt "$@"
     fi
 }
+
+buildpkg() {
+    local pwd=$(pwd)
+    if [ "${pwd#%DE_ROOT%}" = $pwd ]
+    then
+        command buildpkg "$@"
+    else
+        %FACADE_PATH% buildpkg "$@"
+    fi
+}

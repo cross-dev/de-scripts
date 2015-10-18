@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -ex
+
+echo arguments "$@"
+
+makepkg "$@"
+(cd /var/lib/makepkg/pkg && repo-add -R local-builds.db.tar.gz *.tar.xz)

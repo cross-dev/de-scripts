@@ -1,17 +1,41 @@
 make() {
-    ${FACADE_PATH} shell make "$@"
+    local pwd=$(pwd)
+    if [ "${pwd#%DE_ROOT%}" = $pwd ]
+    then
+        command make "$@"
+    else
+        %FACADE_PATH% shell make "$@"
+    fi
 }
 
 makepkg() {
     # makepkg is patched to allow being run as root
-    ${FACADE_PATH} sudo makepkg "$@"
+    local pwd=$(pwd)
+    if [ "${pwd#%DE_ROOT%}" = $pwd ]
+    then
+        command makepkg "$@"
+    else
+        %FACADE_PATH% sudo makepkg "$@"
+    fi
 }
 
 pacman() {
-    ${FACADE_PATH} sudo pacman "$@"
+    local pwd=$(pwd)
+    if [ "${pwd#%DE_ROOT%}" = $pwd ]
+    then
+        command makepkg "$@"
+    else
+        %FACADE_PATH% sudo pacman "$@"
+    fi
 }
 
 yaourt() {
     # yaourt is patched to allow being run as root
-    ${FACADE_PATH} sudo yaourt "$@"
+    local pwd=$(pwd)
+    if [ "${pwd#%DE_ROOT%}" = $pwd ]
+    then
+        command yaourt "$@"
+    else
+        %FACADE_PATH% sudo yaourt "$@"
+    fi
 }

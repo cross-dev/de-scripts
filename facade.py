@@ -50,8 +50,8 @@ def tools(args):
     input.close()
 
 def menuconfig(args):
-    junest = JuNest(cwd=root)
-    return junest.run_unprivileged(["kconfig-nconf", "Kconfig"])
+    junest = JuNest()
+    return junest.run_unprivileged(["kconfig-nconf", "Kconfig"], cwd=root)
 
 def buildpkg(args):
     _project = args.project

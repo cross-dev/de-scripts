@@ -19,7 +19,7 @@ LAYERS_BASE=${BASE}/.cross-dev/layers
 MNT_BASE=${BASE}/.cross-dev/mnt
 
 # Make sure layered structure is alright
-mkdir -p ${LAYERS_BASE}/{base,install,config,good,bad,dist}
+mkdir -p ${LAYERS_BASE}/{base,install,config,good,bad}
 mkdir -p ${MNT_BASE}/{install,config,all}
 
 # Will check the basement and download the image as needed
@@ -50,7 +50,7 @@ echo "## DO NOT EDIT! MINDLESS ROBOTS INBOUND!!" >${BASE}/Kconfig
 # Run product installment script and apply modifications to the product mount point
 JUNEST_HOME=${BASE}/.cross-dev/mnt/install junest -f -- ${BASE}/.cross-dev/de-scripts/product-install
 # Run product configuration script and apply modifications to the configured mount point
-chmod -R u+w ${LAYERS_BASE}/config/*
+[ "$(ls -A ${LAYERS_BASE}/config/)" ] && chmod -R u+w ${LAYERS_BASE}/config/*
 rm -rf ${LAYERS_BASE}/config/*
 JUNEST_HOME=${BASE}/.cross-dev/mnt/config junest -f -- ${BASE}/.cross-dev/de-scripts/product-configure
 

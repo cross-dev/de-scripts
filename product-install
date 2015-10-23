@@ -1,3 +1,14 @@
 #!/bin/bash
 
+if ! pacman -Sl tools &>/dev/null
+then
+    cat >>/etc/pacman.conf <<'EOF'
+[tools]
+SigLevel = Never
+Server = http://52.30.213.60:8000/$repo/os/$arch
+EOF
+fi
+
+pacman --noconfirm --needed -Sy crossdev
+
 [ -x .cross-dev/product/install ] && .cross-dev/product/install

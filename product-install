@@ -1,13 +1,13 @@
 #!/bin/bash
 
-set -x
+set -ex
 
 if [ ! -e /etc/pacman.d/mirrorlist.crossdev ]
 then
     echo 'Server = http://52.30.213.60:8000/$repo/os/$arch' >/etc/pacman.d/mirrorlist.crossdev
 fi
 
-if ! pacman -Syl tools &>/dev/null
+if ! $(dirname $0)/has-repo tools
 then
     cat >>/etc/pacman.conf <<'EOF'
 [tools]

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -x
+
+# Due to https://github.com/rudimeier/bash_ini_parser/issues/8 "set -e" will cause
+# parsing to fail prematurely
+
+source $(dirname $0)/../3rdparty/bash_ini_parser/read_ini.sh
+
+is_in_list() {
+    local what=$1
+    shift
+    local i
+    for i in $@
+    do
+        [ "$i" = $what ] && return 0
+    done
+    return 1
+}
+
+read_ini /etc/pacman.conf tools
+is_in_list $1 $INI__ALL_SECTIONS || exit 1

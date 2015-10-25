@@ -33,7 +33,7 @@ prepare() {
 
 build() {
 	cd "${_base}"
-	make
+	make all
 }
 
 check() {

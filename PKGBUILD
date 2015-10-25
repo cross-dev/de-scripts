@@ -5,43 +5,30 @@
 pkgname="${_project}"
 pkgver="${_version}"
 pkgrel=1
-epoch=
-pkgdesc=""
-arch=('any')
-url=""
-license=('GPL')
-groups=()
-depends=($(make -sC "${_base}" depends))
-makedepends=($(make -sC "${_base}" makedepends))
-checkdepends=($(make -sC "${_base}" checkdepends))
-optdepends=()
-provides=($(make -sC "${_base}" provides))
-conflicts=($(make -sC "${_base}" conflicts))
-replaces=()
-backup=()
-options=($(make -sC "${_base}" options))
-install=
-changelog=
-source=()
-noextract=()
-md5sums=()
-validpgpkeys=()
+
+unset -f _do_prepare _do_build _do_check _do_package
+source ${_base}/PKGBUILD
+# TODO: various checks that nothing forbidden has been touched
+
+_has_function() {
+	declare -f "$1" >/dev/null
+}
 
 prepare() {
-    : not allowed to change the sources
+    ! _has_function _do_prepare || _do_prepare "$@"
 }
 
 build() {
 	cd "${_base}"
-	make all
+    ! _has_function _do_build || _do_build "$@"
 }
 
 check() {
 	cd "${_base}"
-	make -k check
+    ! _has_function _do_check || _do_check "$@"
 }
 
 package() {
 	cd "${_base}"
-	make DESTDIR="${pkgdir}/" install
+    ! _has_function _do_package || DESTDIR="${pkgdir}" _do_package "$@"
 }
